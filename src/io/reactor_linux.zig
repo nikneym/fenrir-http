@@ -12,8 +12,6 @@ pub const Reactor = struct {
     };
 
     pub const Interest = struct {
-        hup: bool = false,
-        oneshot: bool = false,
         readable: bool = false,
         writable: bool = false,
     };
@@ -33,8 +31,6 @@ pub const Reactor = struct {
     /// adds a file descriptor to watch list.
     pub inline fn add(self: Reactor, fd: os.fd_t, identifier: usize, interest: Reactor.Interest) !void {
         var flags: u32 = 0;
-        flags |= if (interest.oneshot) linux.EPOLL.ONESHOT else linux.EPOLL.ET;
-        if (interest.hup) flags |= linux.EPOLL.RDHUP;
         if (interest.readable) flags |= linux.EPOLL.IN;
         if (interest.writable) flags |= linux.EPOLL.OUT;
 
@@ -49,8 +45,6 @@ pub const Reactor = struct {
     /// update flags and data of a file descriptor from watch list.
     pub inline fn update(self: Reactor, fd: os.fd_t, identifier: usize, interest: Reactor.Interest) !void {
         var flags: u32 = 0;
-        flags |= if (interest.oneshot) linux.EPOLL.ONESHOT else linux.EPOLL.ET;
-        if (interest.hup) flags |= linux.EPOLL.RDHUP;
         if (interest.readable) flags |= linux.EPOLL.IN;
         if (interest.writable) flags |= linux.EPOLL.OUT;
 
