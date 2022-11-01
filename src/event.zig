@@ -108,13 +108,13 @@ pub const Loop = struct {
 
             while (event) |e| : (resume poller) {
                 var is_server = e.data == server_ptr;
-
-                if (is_server)
-                    try self.runServerEvents(e)
-                else {
-                    try self.runClientEvents(@intToPtr(*Client, e.data), e, &buf);
-                    buf = undefined;
+                if (is_server) {
+                    try self.runServerEvents(e);
+                    continue;
                 }
+
+                try self.runClientEvents(@intToPtr(*Client, e.data), e, &buf);
+                buf = undefined;
             }
         }
     }
