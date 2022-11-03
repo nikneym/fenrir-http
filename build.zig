@@ -14,6 +14,8 @@ pub fn build(b: *std.build.Builder) void {
     const exe = b.addExecutable("fenrir", "src/main.zig");
     exe.use_stage1 = true;
     exe.setTarget(target);
+    exe.addIncludePath("lib");
+    exe.linkLibC();
     exe.setBuildMode(mode);
     exe.install();
 
